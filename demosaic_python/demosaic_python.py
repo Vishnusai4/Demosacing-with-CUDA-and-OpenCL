@@ -29,8 +29,18 @@ def save_image(img, name):
 	im = plt.imshow(img)
 	plt.savefig("output_img_python/" + name + ".jpg")
 
+
 generate_input(mosaiced_images, gtruth_images)
 
+# Nearest Neighbor
 nn = demosaic_nn.demosaic_nn(mosaiced_images[0])
 save_image(nn, "nearest")
+
+
+# Bilinear Interpolation
+
+
+# Adaptive Gradient based
+
+
 
