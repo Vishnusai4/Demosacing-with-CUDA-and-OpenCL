@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib.image import imread
 import matplotlib.pyplot as plt
 import demosaic_nn
+import demosaic_bi
 
 images = ['balloons.jpg', 'candy.jpg', 'cat.jpg', 'ip.jpg', 
 			'puppy.jpg', 'squirrel.jpg', 'tree.jpg']
@@ -34,11 +35,12 @@ generate_input(mosaiced_images, gtruth_images)
 
 # Nearest Neighbor
 nn = demosaic_nn.demosaic_nn(mosaiced_images[0])
-save_image(nn, "nearest")
+save_image(nn, "nearest_neighbor")
 
 
 # Bilinear Interpolation
-
+bi = demosaic_bi.demosaic_bi(mosaiced_images[0])
+save_image(bi, "bilinear_interpolation")
 
 # Adaptive Gradient based
 
