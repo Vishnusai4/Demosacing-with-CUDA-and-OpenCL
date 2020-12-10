@@ -2,6 +2,42 @@ import numpy as np
 from matplotlib.image import imread
 import matplotlib.pyplot as plt
 
+RIGHT = "right"
+RIGHT_CORNER = "right corner"
+BOTTOM = "bottom"
+
+def closest_pixel(r, c, region, im):
+	# Function to simplify boundary cases
+	# Ex: If we are looking at the last col, 
+	#     and usually we copy the val from the pixel to the right
+	#     it would instead copy the val from the left
+
+	shape = im.shape
+
+	if (region == RIGHT): # Example: For pixel [0, 0], the green pixel is on the right
+		if (is_out_of_bounds(r, c+1, shape)):
+			# Return the pixel to the left instead
+			return im[r][c-1]
+		else:
+			return im[r][c+1]
+	elif (region == RIGHT_CORNER): # Example: For pixel [0, 0]: the blue pixel is on the right corner
+		if (is_out_of_bounds(r+1, c+1, shape)):
+			# Return the left top pixel instead
+			return im[r-1][c-1]
+		else:
+			return im[r+1][c+1]
+	elif (region == BOTTOM): # Example: For pixel [0, 1]: the blue pixel is directly on the bottom of the green pixel
+		if (is_out_of_bounds(r+1, c, shape)):
+			return im[r-1][c]
+		else:
+			return im[r+1][c]
+	else:
+		print("Error: " + region + " command not recognized")
+		return 0
+
+def is_out_of_bounds(r, c, shape):
+	return (r < 0 or r >= shape[0] or c < 0 or c >= shape[1])
+
 def demosaic_nn(im):
 	'''
 	m[x][y][0] --> RED
@@ -19,41 +55,30 @@ def demosaic_nn(im):
 
 	# 3D Image Channel: Demosaiced
 	im_d = np.zeros((im.shape[0], im.shape[1], 3))
+	shape = im.shape
 	
 	print("Shape of the Image: ", im.shape)
-	
-	# Iterate in intervals of 2
-	for y in range(0, (im.shape[0]), 2):
-		for x in range(0, (im.shape[1]), 2):
-			# Manually add the four pixels
-			try:
-				if (y != im.shape[0]-1 or x != im.shape[0]-1):
-					# Prepare the values from 2D Image
-					red           = im[y][x]
-					green_top     = im[y][x+1]
-					green_bottom  = im[y+1][x]
-					blue          = im[y+1][x+1]
 
-					# Left Top Pixel: Missing Green and Blue
-					im_d[y][x][0] = red
-					im_d[y][x][1] = green_top # Green (right top)
-					im_d[y][x][2] = blue 
+	for r in range(0, im.shape[0]):
+		for c in range(0, im.shape[1]):
 
-					# Right Top Pixel: Missing Red and Blue
-					im_d[y][x+1][0] = red
-					im_d[y][x+1][1] = green_top
-					im_d[y][x+1][2] = blue
-
-					# Third Pixel: Missing Red and Blue
-					im_d[y+1][x][0] = red
-					im_d[y+1][x][1] = green_bottom
-					im_d[y+1][x][2] = blue
-
-					# Fourth Pixel: Missing Red and Green
-					im_d[y+1][x+1][0] = red
-					im_d[y+1][x+1][1] = green_bottom
-					im_d[y+1][x+1][2] = blue
-			except:
-				continue
-   				
+			if (r % 2 == 0): # RED GREEN pattern row
+				if (c % 2 == 0): # RED pixel
+					im_d[r][c][0] = im[r][c]
+					im_d[r][c][1] = closest_pixel(r, c, RIGHT, im)
+					im_d[r][c][2] = closest_pixel(r, c, RIGHT_CORNER, im)
+				else: # GREEN pixel
+					im_d[r][c][0] = closest_pixel(r, c, RIGHT, im)
+					im_d[r][c][1] = im[r][c]
+					im_d[r][c][2] = closest_pixel(r, c, BOTTOM, im)
+			else: # GREEN BLUE pattern row
+				if (c % 2 == 0): # Green pixel
+					im_d[r][c][0] = closest_pixel(r, c, BOTTOM, im)
+					im_d[r][c][1] = im[r][c]
+					im_d[r][c][2] = closest_pixel(r, c, RIGHT, im)
+				else: # Blue pixel
+					im_d[r][c][0] = closest_pixel(r, c, RIGHT_CORNER, im)
+					im_d[r][c][1] = closest_pixel(r, c, RIGHT, im)
+					im_d[r][c][2] = im[r][c]
+				
 	return im_d
