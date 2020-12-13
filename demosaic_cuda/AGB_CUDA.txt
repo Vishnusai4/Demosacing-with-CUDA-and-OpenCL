@@ -21,17 +21,17 @@ public:
 };
 
 
-__device__ float get_pixel_value(float *im, int h,int w,Pixel l,Pixel r,Pixel t,Pixel b);
+__device__ float get_pixel_value(float *im, int h,int w,int* l,int* r,int* t,int* b);
 
-__device__ bool is_valid_pair(Pixel ind1,Pixel ind2,int h, int w);
+__device__ bool is_valid_pair(int* ind1,int* ind2,int h, int w);
 
-__device__ bool is_valid_pixel(Pixel ind, int h, int w);
+__device__ bool is_valid_pixel(int* ind, int h, int w);
 
-__device__ float average_of_valid_pixels(Pixel l, Pixel r,Pixel t,Pixel b,float *im,int h,int w);
+__device__ float average_of_valid_pixels(int* l, int* r,int* t,int* b,float *im,int h,int w);
 
-__device__ float average_of_two(Pixel p1,Pixel p2, float *im, int h, int w);
+__device__ float average_of_two(int* p1,int* p2, float *im, int h, int w);
 
- __global__ void nearn(float *out_r,float *out_g,float *out_b,float *in, const unsigned int h, unsigned int w)
+ __global__ void bilinear(float *out_r,float *out_g,float *out_b,float *in, const unsigned int h, unsigned int w)
  
  {
  int c = blockIdx.x*blockDim.x + threadIdx.x;
@@ -39,15 +39,15 @@ __device__ float average_of_two(Pixel p1,Pixel p2, float *im, int h, int w);
  
  if (c < w && r < h)
  {
- Pixel left_top(r-1,c-1);
- Pixel mid_top(r-1,c);
- Pixel right_top(r-1,c+1);
+ int left_top[2] = {r-1,c-1};
+ int  mid_top[2] = {r-1,c};
+ int right_top[2] = {r-1,c+1};
  
- Pixel left_mid(r,c-1);
- Pixel right_mid(r,c+1);
- Pixel bottom_left(r+1,c-1);
- Pixel bottom_mid(r+1,c);
- Pixel bottom_right(r+1,c+1);
+ int left_mid[2] = {r,c-1};
+ int right_mid[2] = {r,c+1};
+ int bottom_left[2] = {r+1,c-1};
+ int bottom_mid[2] = {r+1,c};
+ int bottom_right[2] = {r+1,c+1};
  
  if (r%2 ==0)
  {
@@ -61,7 +61,7 @@ __device__ float average_of_two(Pixel p1,Pixel p2, float *im, int h, int w);
  {
  out_r[r*w+c] = average_of_two(left_mid, right_mid, in, h,w);
  out_g[r*w+c] = in[r*w+c];
- out_b[r*w+c] =average_of_two(mid_top, bottom_mid, in,h,w);
+ out_b[r*w+c] = average_of_two(mid_top, bottom_mid, in,h,w);
 
  }
  }
@@ -84,14 +84,14 @@ __device__ float average_of_two(Pixel p1,Pixel p2, float *im, int h, int w);
  }
  }
  
- __device__ float get_pixel_value(float *im,int h,int w, Pixel l,Pixel r,Pixel t,Pixel b)
+ __device__ float get_pixel_value(float *im,int h,int w, int* l,int* r,int* t,int* b)
  {
  if (is_valid_pair(l, r, h,w) and is_valid_pair(t, b, h,w))
  {
-      float  top_pixel = im[t.y*w+t.x];
-      float bottom_pixel = im[b.y*w+b.x];
-      float left_pixel = im[l.y*w+l.x];
-      float right_pixel = im[r.y*w+r.x];
+      float  top_pixel = im[t[0]*w+t[1]];
+      float bottom_pixel = im[b[0]*w+b[1]];
+      float left_pixel = im[l[0]*w+l[1]];
+      float right_pixel = im[r[0]*w+r[1]];
         if (abs(top_pixel - bottom_pixel) > abs(left_pixel - right_pixel))
         {
             return ((left_pixel + right_pixel) / 2);
@@ -107,36 +107,37 @@ __device__ float average_of_two(Pixel p1,Pixel p2, float *im, int h, int w);
         }
  }
  
- __device__ bool is_valid_pair(Pixel ind1,Pixel ind2,int h, int w)
+ __device__ bool is_valid_pair(int* ind1,int ind2*,int h, int w)
  {
- return is_valid_pixel(ind1,h,w) and is_valid_pixel(ind2,h,w);
+ return is_valid_pixel(ind1,h,w) && is_valid_pixel(ind2,h,w);
  }
 
 
-__device__ bool is_valid_pixel(Pixel ind, int h, int w)
+__device__ bool is_valid_pixel(int* ind, int h, int w)
 {
-if (ind.x < 0 or ind.x >= h or ind.y < 0 or ind.y >= h) 
+if (ind[1] < 0 or ind[1] >= h or ind[0] < 0 or ind[0] >= h) 
 {
      return false;
 }
 return true;
 }
 
-__device__ float average_of_valid_pixels(Pixel l, Pixel r,Pixel t,Pixel b,float *im, int h, int w)
+__device__ float average_of_valid_pixels(int* l, int* r,int* t,int* b,float *im, int h, int w)
 {
 
-int temp = 0;
+float temp = 0;
 int count = 0;
 
 //thrust::host_vector<Pixel> pixels(4);
 
-Pixel pixels [4] = { l, r, t, b };
+int pixels [4] = { l, r, t, b };
 
-for(int p = 0; p < pixels.size(); p++)
+for(int p = 0; p < 4; p++)
 {
-if (!(*p.x < 0 or *p.x >= h or *p.y < 0 or *p.y >= w))
+//Pixel temp1 = pixels[p];
+if (!(pixels[p][1] < 0 or pixels[p][1] >= h or pixels[p][0] < 0 or pixels[p][0] >= w))
 {
-temp += im[(*p.y)*w + (*p.x)];
+temp += im[(pixels[p][0])*w + (pixels[p][1])];
 count +=1;
 }
 
@@ -146,19 +147,19 @@ return (temp/count);
 }
 
 
-__device__ float average_of_two(Pixel p1,Pixel p2, float *im, int h, int w)
+__device__ float average_of_two(int* p1,int* p2, float *im, int h, int w)
 
 {
 if (is_valid_pair(p1, p2,h,w))
 {
-return ((im[(p1.y)*w + p1.x] + im[(p2.y)*w + p2.x])/2);
+return ((im[(p1[0])*w + p1[1]] + im[(p2[0])*w + p2[1]])/2);
 }
 else if (is_valid_pixel(p1,h,w))
 {
-return im[p1.y*w + p1.x];
+return im[p1[0]*w + p1[1]];
 }
 else
 {
-return im[p2.y*w + p2.x];
+return im[p2[0]*w + p2[1]];
 }
 }"""
