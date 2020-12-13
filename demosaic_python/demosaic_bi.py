@@ -2,86 +2,104 @@ import numpy as np
 from matplotlib.image import imread
 import matplotlib.pyplot as plt
 
-color = {"red": 0, "green": 1, "blue": 2}
+class Pixel:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+def is_valid_pair(ind1, ind2, shape):
+    return is_valid_pixel(ind1, shape) and is_valid_pixel(ind2, shape)
+
+def is_valid_pixel(ind, shape):
+    row_size = shape[0]
+    col_size = shape[1]
+
+    # If its out of bounds, return False
+    if (ind.x < 0 or ind.x >= row_size or ind.y < 0 or ind.y >= col_size):
+        return False
+    
+    # Pixel is NOT out of bounds
+    return True
+
+def average_of_valid_pixels(l, r, t, b, im):
+    # If there are pixels that are out of the boundary, don't include them in the avg calculation
+
+    row_size = im.shape[0]
+    col_size = im.shape[1]
+
+    pixels = [l, r, t, b]
+    temp, count = 0, 0
+
+    for p in pixels:
+        if not (p.x < 0 or p.x >= row_size or p.y < 0 or p.y >= col_size):
+            temp += im[p.x][p.y]
+            count += 1
+
+    if (count == 0): # This shouldn't happen because at least two of the pixels will be valid
+        return 0
+
+    return temp / count
+
+def average_of_two(p1, p2, im):
+    row_size = im.shape[0]
+    col_size = im.shape[1]
+
+    if (is_valid_pair(p1, p2, im.shape)):
+        return (im[p1.x][p1.y] + im[p2.x][p2.y])/2
+    elif(is_valid_pixel(p1, im.shape)):
+        return im[p1.x][p1.y]
+    else:
+        return im[p2.x][p2.y]
 
 # Bilinear Interpolation Demosaicing
 def demosaic_bi(im):
-
     '''
     m[x][y][0] --> RED
     m[x][y][1] --> GREEN
     m[x][y][2] --> BLUE
     '''
-
+    
     m = np.zeros((im.shape[0], im.shape[1], 3))
     shape = im.shape
+    row, col = shape[0], shape[1]
 
-    # Padded Image - Padded with '-1'
-    im_p = np.negative(np.ones((im.shape[0] + 2, im.shape[1] + 2)))
-    im_p[1:shape[0]+1,1:shape[1]+1] = im
-    
-    for y in range(1, im.shape[0]+1):
-        for x in range(1, im.shape[1]+1):
+    for r in range(im.shape[0]):
+        for c in range(im.shape[1]):
 
-            # Normalize to compensate for padding
-            row = y-1
-            col = x-1 
+            left_top = Pixel(r-1, c-1)
+            mid_top = Pixel(r-1, c)
+            right_top = Pixel(r-1, c+1)
+            left_mid = Pixel(r, c-1)
+            right_mid = Pixel(r, c+1)
+            bottom_left = Pixel(r+11, c-1)
+            bottom_mid = Pixel(r+1, c)
+            bottom_right = Pixel(r+1, c+1)
 
-            # In this format:
-            # X   X
-            #   P
-            # X   X
-            corner_pixels = np.array([im_p[y-1][x-1], im_p[y-1][x+1], im_p[y+1][x-1], im_p[y+1][x+1]])
-            corner_pixels = corner_pixels[corner_pixels >= 0]
-            # In this format:
-            #   X 
-            # X P X
-            #   X               
-            edge_pixels = np.array([im_p[y][x-1], im_p[y][x+1], im_p[y-1][x], im_p[y+1][x]])
-            edge_pixels = edge_pixels[edge_pixels >= 0]
+            if (r % 2 == 0): # RED GREEN pattern row
+                if (c % 2 == 0): # RED pixel
 
-            # In this format:
-            # X P X
-            l_r_pixels = np.array([im_p[y][x-1], im_p[y][x+1]])
-            l_r_pixels = l_r_pixels[l_r_pixels >= 0]
-
-            # In this format:
-            #   X
-            #   P
-            #   X
-            t_b_pixels = np.array([im_p[y-1][x], im_p[y+1][x]])
-            t_b_pixels = t_b_pixels[t_b_pixels >= 0]
-
-            if (y%2 == 1): # RED GREEN pattern row
-                if (x%2 == 1): # RED pixel
-
-                    # Get red pixel - copy
-                    m[row][col][0] = im_p[y][x]
-                    # Get green pixel - take avg of surrounding non-negative green pixels
-                    m[row][col][1] = edge_pixels.mean()
-                    # Get blue pixel - take avg of surrounding non-negative blue pixels
-                    m[row][col][2] = corner_pixels.mean()
+                    m[r][c][0] = im[r][c]
+                    m[r][c][1] = average_of_valid_pixels(left_mid, right_mid, mid_top, bottom_mid, im)
+                    m[r][c][2] = average_of_valid_pixels(left_top, bottom_right, bottom_left, right_top, im)
 
                 else: # GREEN pixel
 
-                    # Get red pixel - take avg of surrounding non-negative red pixels
-                    m[row][col][0] = l_r_pixels.mean()
-                    # Get green pixel - copy
-                    m[row][col][1] = im_p[y][x]
-                    # Get blue pixel - take avg of surrounding non-negative blue pixels
-                    m[row][col][2] = t_b_pixels.mean()
+                    m[r][c][0] = average_of_two(left_mid, right_mid, im)
+                    m[r][c][1] = im[r][c]
+                    m[r][c][2] = average_of_two(mid_top, bottom_mid, im)
 
-            else: # BLUE GREEN pattern row
-                if (x%2 == 1): # GREEN pixel
-
-                    m[row][col][0] = t_b_pixels.mean()
-                    m[row][col][1] = im_p[y][x]
-                    m[row][col][2] = l_r_pixels.mean()
+            else: # GREEN BLUE pattern row
+                if (c % 2 == 0): # GREEN pixel
+                    
+                    m[r][c][0] = average_of_two(mid_top, bottom_mid, im)
+                    m[r][c][1] = im[r][c]
+                    m[r][c][2] = average_of_two(left_mid, right_mid, im)
 
                 else: # BLUE pixel
 
-                    m[row][col][0] = corner_pixels.mean()
-                    m[row][col][1] = edge_pixels.mean()
-                    m[row][col][2] = im_p[y][x]
+                    m[r][c][0] = average_of_valid_pixels(left_top, bottom_right, bottom_left, right_top, im)
+                    m[r][c][1] = average_of_valid_pixels(left_mid, right_mid, mid_top, bottom_mid, im)
+                    m[r][c][2] = im[r][c]
 
     return m
+
