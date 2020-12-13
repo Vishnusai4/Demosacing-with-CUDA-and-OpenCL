@@ -109,7 +109,7 @@ __device__ float average_of_two(int* p1,int* p2, float *im, int h, int w);
  
  __device__ bool is_valid_pair(int* ind1,int ind2*,int h, int w)
  {
- return is_valid_pixel(ind1,h,w) && is_valid_pixel(ind2,h,w);
+ return (is_valid_pixel(ind1,h,w) && is_valid_pixel(ind2,h,w));
  }
 
 
