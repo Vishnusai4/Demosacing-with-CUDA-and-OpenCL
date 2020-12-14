@@ -550,8 +550,8 @@ def is_equal(im1, im2):
 
 class Nearest_neighbor:
 	# Number of times we are running it (this will be useful when we calculate the avg execution time)
-	self.gpu_im = None
-	self.cpu_im = None
+	gpu_im = None
+	cpu_im = None
 
 	def __init__(self, im):
 		self.im = im
