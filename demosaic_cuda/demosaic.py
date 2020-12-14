@@ -560,7 +560,7 @@ def save_image(img, name):
 	plt.close()
 
 def create_plot(name, cpu, gpu):
-	x_axis = ["NN", "Bi", "AGB"]
+	x_axis = ["Nearest Neighbor", "Bilinear", "Adaptive Gradient"]
 	plt.plot(x_axis, cpu, 'r', x_axis, gpu, 'b')
 	plt.legend(["CPU", "GPU"])
 	plt.xlabel('Demosaic Method')
@@ -687,7 +687,7 @@ if __name__ == '__main__':
 	generate_input(mosaiced_images, gtruth_images)
 	im = mosaiced_images[0].astype(np.float32) # Change this to change picture
 
-	TRIALS = 3
+	TRIALS = 5
 
 	# NEAREST NEIGHBOR
 	nearest_neighbor = Nearest_neighbor(im)
@@ -698,9 +698,9 @@ if __name__ == '__main__':
 	save_image(gpu_output_nn, "nearest_neighbor_GPU")
 
 	print("*" * 20)
+	print("NEAREST NEIGHBOR")
 	print("cpu_time (nn): ", cpu_time_nn)
 	print("gpu_time (nn): ", gpu_time_nn)
-	print("*" * 20)
 
 	# BILINEAR
 	bilinear = Bilinear(im)
@@ -711,9 +711,9 @@ if __name__ == '__main__':
 	save_image(gpu_output_bi, "bilinear_interpolation_GPU")
 
 	print("*" * 20)
+	print("BILINEAR INTERPOLATION")
 	print("cpu_time (bi): ", cpu_time_bi)
 	print("gpu_time (bi): ", gpu_time_bi)
-	print("*" * 20)
 
 	# ADAPTIVE GRADIENT BASED
 	adaptive = Adaptive_Gradient_Based(im)
@@ -724,6 +724,7 @@ if __name__ == '__main__':
 	save_image(gpu_output_agb, "adaptive_gradient_based_GPU")
 
 	print("*" * 20)
+	print("ADAPTIVE GRADIENT BASED")
 	print("cpu_time (agb): ", cpu_time_agb)
 	print("gpu_time (agb): ", gpu_time_agb)
 	print("*" * 20)
