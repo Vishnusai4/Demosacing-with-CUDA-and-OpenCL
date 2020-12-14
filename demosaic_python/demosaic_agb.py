@@ -90,7 +90,7 @@ def demosaic_adaptive(im):
 			right_top = Pixel(r-1, c+1)
 			left_mid = Pixel(r, c-1)
 			right_mid = Pixel(r, c+1)
-			bottom_left = Pixel(r+11, c-1)
+			bottom_left = Pixel(r+1, c-1)
 			bottom_mid = Pixel(r+1, c)
 			bottom_right = Pixel(r+1, c+1)
 
