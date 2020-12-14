@@ -3,6 +3,7 @@
 import time
 import numpy as np
 import sys
+import math
 
 from pycuda import gpuarray
 import pycuda.driver as cuda
