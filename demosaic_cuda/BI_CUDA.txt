@@ -1,4 +1,4 @@
-agb_kernel = """
+bilinear_kernel = """
 #include <stdlib.h>
 //#include <thrust/host_vector.h>
 //#include <thrust/device_vector.h>
