@@ -410,12 +410,12 @@ class Demosaic:
 		out = np.zeros((h,w)).astype(np.float32)
 
 		pycuda.driver.Context.synchronize()
-		a_gpu = cuda.mem_alloc(mosaic.size * mosaic.dtype.itemsize)
+		a_gpu = cuda.mem_alloc(self.im.size * self.im.dtype.itemsize)
 		out_r_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 		out_g_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 		out_b_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 
-		cuda.memcpy_htod(a_gpu, mosaic)
+		cuda.memcpy_htod(a_gpu, self.im)
 		cuda.memcpy_htod(out_r_gpu, out)
 		cuda.memcpy_htod(out_g_gpu, out)
 		cuda.memcpy_htod(out_b_gpu, out)
@@ -435,7 +435,7 @@ class Demosaic:
 
 		return c_opt, e_start.time_till(e_end)
 
-	def demosaic_nn_GPU(self):
+	def demosaic_bi_GPU(self):
 
 		e_start = cuda.Event()
 		e_end = cuda.Event()
@@ -446,12 +446,12 @@ class Demosaic:
 		out = np.zeros((h,w)).astype(np.float32)
 
 		pycuda.driver.Context.synchronize()
-		a_gpu = cuda.mem_alloc(mosaic.size * mosaic.dtype.itemsize)
+		a_gpu = cuda.mem_alloc(self.im.size * self.im.dtype.itemsize)
 		out_r_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 		out_g_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 		out_b_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 
-		cuda.memcpy_htod(a_gpu, mosaic)
+		cuda.memcpy_htod(a_gpu, self.im)
 		cuda.memcpy_htod(out_r_gpu, out)
 		cuda.memcpy_htod(out_g_gpu, out)
 		cuda.memcpy_htod(out_b_gpu, out)
@@ -471,7 +471,7 @@ class Demosaic:
 
 		return c_opt, e_start.time_till(e_end)
 
-	def demosaic_nn_GPU(self):
+	def demosaic_agb_GPU(self):
 
 		e_start = cuda.Event()
 		e_end = cuda.Event()
@@ -482,12 +482,12 @@ class Demosaic:
 		out = np.zeros((h,w)).astype(np.float32)
 
 		pycuda.driver.Context.synchronize()
-		a_gpu = cuda.mem_alloc(mosaic.size * mosaic.dtype.itemsize)
+		a_gpu = cuda.mem_alloc(self.im.size * self.im.dtype.itemsize)
 		out_r_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 		out_g_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 		out_b_gpu = cuda.mem_alloc(out.size * out.dtype.itemsize)
 
-		cuda.memcpy_htod(a_gpu, mosaic)
+		cuda.memcpy_htod(a_gpu, self.im)
 		cuda.memcpy_htod(out_r_gpu, out)
 		cuda.memcpy_htod(out_g_gpu, out)
 		cuda.memcpy_htod(out_b_gpu, out)
