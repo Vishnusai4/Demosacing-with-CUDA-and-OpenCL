@@ -178,7 +178,7 @@ class Demosaic:
 		 }
 		 }
 		 }
-		 }
+		 
 		 
 		 
 		 __device__ bool is_valid_pair(int *ind1,int *ind2,int h, int w)
