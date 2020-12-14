@@ -269,11 +269,6 @@ class Demosaic:
 		 int bottom_mid[2] = {r+1,c};
 		 int bottom_right[2] = {r+1,c+1};
 		 
-		 float image_shared[9];
-		 if (r < h && c < w)
-		 {
-		 if (r)
-		 }
 		 if (r%2 ==0)
 		 {
 		 if (c%2 ==0)
