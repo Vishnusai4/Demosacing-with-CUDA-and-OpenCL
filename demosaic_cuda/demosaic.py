@@ -598,7 +598,7 @@ if __name__ == '__main__':
 
 	nearest_neighbor = Nearest_neighbor(im)
 	cpu_time, gpu_time = nearest_neighbor.get_average(TRIALS)
-	gpu_output = nn.gpu_im
+	gpu_output = nearest_neighbor.gpu_im
 
 	print("cpu_time: ", cpu_time)
 	print("gpu_time: ", gpu_time)
