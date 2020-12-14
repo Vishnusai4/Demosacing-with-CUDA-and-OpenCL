@@ -12,6 +12,7 @@ import pycuda.autoinit
 import matplotlib as mpl
 mpl.use('agg')
 import matplotlib.pyplot as plt
+from matplotlib.image import imread
 
 sys.path.insert(1, '../demosaic_python')
 import demosaic_nn as nn 
