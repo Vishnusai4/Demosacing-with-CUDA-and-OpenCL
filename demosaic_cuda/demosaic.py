@@ -470,7 +470,7 @@ class Demosaic:
 
 		return c_opt, e_start.time_till(e_end)
 
-		def demosaic_nn_GPU(self):
+	def demosaic_nn_GPU(self):
 
 		e_start = cuda.Event()
 		e_end = cuda.Event()
