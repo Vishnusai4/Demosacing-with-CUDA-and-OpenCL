@@ -385,6 +385,8 @@ class Demosaic:
 		}
 		}"""
 
+		self.im = im
+
 		self.prg_nn = SourceModule(nn_kernel).get_function("nearn")
 		self.prg_bi = SourceModule(bilinear_kernel).get_function("bilinear")
 		self.prg_agb = SourceModule(agb_kernel).get_function("agb")
