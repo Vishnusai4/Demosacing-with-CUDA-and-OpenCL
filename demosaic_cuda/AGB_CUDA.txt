@@ -130,14 +130,14 @@ int count = 0;
 
 //thrust::host_vector<Pixel> pixels(4);
 
-int pixels [4] = {l, r, t, b};
+int pixels [] = {l[0],l[1] r[0],r[1] t[0], t[1],b[0],b[1]};
 
-for(int p = 0; p < 4; p++)
+for(int p = 0; p < 8; p+=2)
 {
 //Pixel temp1 = pixels[p];
-if (!(pixels[p][1] < 0 or pixels[p][1] >= h or pixels[p][0] < 0 or pixels[p][0] >= w))
+if (!(pixels[p+1] < 0 || pixels[p+1] >= w || pixels[p] < 0 || pixels[p] >= h))
 {
-temp += im[(pixels[p][0])*w + (pixels[p][1])];
+temp += im[(pixels[p])*w + (pixels[p+1])];
 count +=1;
 }
 
