@@ -557,6 +557,7 @@ def show_image(img):
 def save_image(img, name):
 	im = plt.imshow(img)
 	plt.savefig("output_image_cuda/" + name + ".jpg")
+	plt.close()
 
 def create_plot(name, cpu, gpu):
 	x_axis = ["NN", "Bi", "AGB"]
@@ -696,8 +697,10 @@ if __name__ == '__main__':
 	gpu_output_nn = nearest_neighbor.gpu_im
 	save_image(gpu_output_nn, "nearest_neighbor_GPU")
 
+	print("*" * 20)
 	print("cpu_time (nn): ", cpu_time_nn)
 	print("gpu_time (nn): ", gpu_time_nn)
+	print("*" * 20)
 
 	# BILINEAR
 	bilinear = Bilinear(im)
@@ -705,10 +708,12 @@ if __name__ == '__main__':
 	error_check(bi_results, "Bilinear Interpolation")
 	cpu_time_bi, gpu_time_bi = bilinear.get_average(TRIALS)
 	gpu_output_bi = bilinear.gpu_im
-	save_image(gpu_output_bi, "nearest_neighbor_GPU")
+	save_image(gpu_output_bi, "bilinear_interpolation_GPU")
 
-	print("cpu_time (nn): ", cpu_time_bi)
-	print("gpu_time (nn): ", gpu_time_bi)
+	print("*" * 20)
+	print("cpu_time (bi): ", cpu_time_bi)
+	print("gpu_time (bi): ", gpu_time_bi)
+	print("*" * 20)
 
 	# ADAPTIVE GRADIENT BASED
 	adaptive = Adaptive_Gradient_Based(im)
@@ -716,10 +721,12 @@ if __name__ == '__main__':
 	error_check(agb_results, "Adaptive Gradient Based")
 	cpu_time_agb, gpu_time_agb = adaptive.get_average(TRIALS)
 	gpu_output_agb = adaptive.gpu_im
-	save_image(gpu_output_agb, "nearest_neighbor_GPU")
+	save_image(gpu_output_agb, "adaptive_gradient_based_GPU")
 
-	print("cpu_time (nn): ", cpu_time_agb)
-	print("gpu_time (nn): ", gpu_time_agb)
+	print("*" * 20)
+	print("cpu_time (agb): ", cpu_time_agb)
+	print("gpu_time (agb): ", gpu_time_agb)
+	print("*" * 20)
 
 
 	# Create plot
