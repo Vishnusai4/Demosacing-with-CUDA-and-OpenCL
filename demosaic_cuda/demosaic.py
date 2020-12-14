@@ -546,6 +546,14 @@ def generate_input(mosaiced_images, gtruth_images):
 def is_equal(im1, im2):
 	return im1.all() == im2.all()
 
+def show_image(img):
+	im = plt.imshow(img)
+	plt.show()
+
+def save_image(img, name):
+	im = plt.imshow(img)
+	plt.savefig("output_img_python/" + name + ".jpg")
+
 class Nearest_neighbor:
 	# Number of times we are running it (this will be useful when we calculate the avg execution time)
 	gpu_im = None
@@ -582,6 +590,79 @@ class Nearest_neighbor:
 
 		return hashmap
 
+class Bilinear:
+	# Number of times we are running it (this will be useful when we calculate the avg execution time)
+	gpu_im = None
+	cpu_im = None
+
+	def __init__(self, im):
+		self.im = im
+		self.demosaic = Demosaic(im)
+
+	def get_average(self, num):
+		gpu_time = 0
+		cpu_time = 0
+
+		for x in range(num):
+			hashmap = self.get_results()
+
+			gpu_time += hashmap["gpu_time"]
+			cpu_time += hashmap["cpu_time"]
+
+		# Save the GPU nn output if it hasn't been saved yet
+		self.gpu_im = hashmap["gpu_out"]
+		self.cpu_im = hashmap["cpu_out"]
+
+		return cpu_time/num, gpu_time/num
+
+	def get_results(self):
+		nn_cpu_out, nn_cpu_time = self.demosaic.demosaic_bi_GPU()
+		nn_gpu_out, nn_gpu_time = self.demosaic.demosaic_bi_CPU()
+		hashmap = {
+		"gpu_out": nn_gpu_out, 
+		"gpu_time": nn_gpu_time,
+		"cpu_out": nn_cpu_out,
+		"cpu_time": nn_cpu_time}
+
+		return hashmap
+
+class Adaptive_Gradient_Based:
+	# Number of times we are running it (this will be useful when we calculate the avg execution time)
+	gpu_im = None
+	cpu_im = None
+
+	def __init__(self, im):
+		self.im = im
+		self.demosaic = Demosaic(im)
+
+	def get_average(self, num):
+		gpu_time = 0
+		cpu_time = 0
+
+		for x in range(num):
+			hashmap = self.get_results()
+
+			gpu_time += hashmap["gpu_time"]
+			cpu_time += hashmap["cpu_time"]
+
+		# Save the GPU nn output if it hasn't been saved yet
+		self.gpu_im = hashmap["gpu_out"]
+		self.cpu_im = hashmap["cpu_out"]
+
+		return cpu_time/num, gpu_time/num
+
+	def get_results(self):
+		nn_cpu_out, nn_cpu_time = self.demosaic.demosaic_agb_GPU()
+		nn_gpu_out, nn_gpu_time = self.demosaic.demosaic_agb_CPU()
+		hashmap = {
+		"gpu_out": nn_gpu_out, 
+		"gpu_time": nn_gpu_time,
+		"cpu_out": nn_cpu_out,
+		"cpu_time": nn_cpu_time}
+
+		return hashmap
+
+
 
 if __name__ == '__main__':
 
@@ -589,20 +670,47 @@ if __name__ == '__main__':
 			'puppy.jpg', 'squirrel.jpg', 'tree.jpg']
 	mosaiced_images = []
 	gtruth_images = []
-
 	generate_input(mosaiced_images, gtruth_images)
-
 	im = mosaiced_images[0].astype(np.float32) # Change this to change picture
 
 	TRIALS = 3
 
+	# NEAREST NEIGHBOR
 	nearest_neighbor = Nearest_neighbor(im)
-	cpu_time, gpu_time = nearest_neighbor.get_average(TRIALS)
-	gpu_output = nearest_neighbor.gpu_im
+	nn_results = nearest_neighbor.get_results()
+	if (not is_equal(nn_results["gpu_out"], nn_results["cpu_out"])):
+		print("NEAREST NEIGHBOR output is not matching...")
+	cpu_time_nn, gpu_time_nn = nearest_neighbor.get_average(TRIALS)
+	gpu_output_nn = nearest_neighbor.gpu_im
+	save_image(gpu_output_nn, "nearest_neighbor_GPU")
 
-	print("cpu_time: ", cpu_time)
-	print("gpu_time: ", gpu_time)
-	print("gpu output: ", gpu_output)
+	print("cpu_time (nn): ", cpu_time_nn)
+	print("gpu_time (nn): ", gpu_time_nn)
+
+	# BILINEAR
+	bilinear = Bilinear(im)
+	bi_results = bilinear.get_results()
+	if (not is_equal(bi_results["gpu_out"], bi_results["cpu_out"])):
+		print("BILINEAR output is not matching...")
+	cpu_time_bi, gpu_time_bi = bilinear.get_average(TRIALS)
+	gpu_output_bi = bilinear.gpu_im
+	save_image(gpu_output_bi, "nearest_neighbor_GPU")
+
+	print("cpu_time (nn): ", cpu_time_bi)
+	print("gpu_time (nn): ", gpu_time_bi)
+
+	# ADAPTIVE GRADIENT BASED
+	adaptive = Adaptive_Gradient_Based(im)
+	agb_results = adaptive.get_results()
+	if (not is_equal(agb_results["gpu_out"], agb_results["cpu_out"])):
+		print("ADAPTIVE GRADIENT BASED output is not matching...")
+	cpu_time_agb, gpu_time_agb = adaptive.get_average(TRIALS)
+	gpu_output_agb = adaptive.gpu_im
+	save_image(gpu_output_agb, "nearest_neighbor_GPU")
+
+	print("cpu_time (nn): ", cpu_time_agb)
+	print("gpu_time (nn): ", gpu_time_agb)
+
 
 
 
