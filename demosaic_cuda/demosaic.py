@@ -556,7 +556,7 @@ def show_image(img):
 
 def save_image(img, name):
 	im = plt.imshow(img)
-	plt.savefig("output_img_python/" + name + ".jpg")
+	plt.savefig("output_img_cuda/" + name + ".jpg")
 
 def create_plot(name, cpu, gpu):
 	x_axis = ["NN", "Bi", "AGB"]
