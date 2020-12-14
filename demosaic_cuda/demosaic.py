@@ -561,14 +561,13 @@ class Nearest_neighbor:
 
 		for x in range(num):
 			hashmap = self.get_results()
-			# Save the GPU nn output if it hasn't been saved yet
-			if (self.gpu_im == None):
-				self.gpu_im = hashmap["gpu_out"]
-			if (self.cpu_im == None):
-				self.cpu_im = hashmap["cpu_out"]
 
 			gpu_time += hashmap["gpu_time"]
 			cpu_time += hashmap["cpu_time"]
+
+		# Save the GPU nn output if it hasn't been saved yet
+		self.gpu_im = hashmap["gpu_out"]
+		self.cpu_im = hashmap["cpu_out"]
 
 		return cpu_time/num, gpu_time/num
 
