@@ -546,6 +546,10 @@ def generate_input(mosaiced_images, gtruth_images):
 def is_equal(im1, im2):
 	return im1.all() == im2.all()
 
+def error_check(hashmap, methodName):
+	if (not is_equal(hashmap["gpu_out"], hashmap["cpu_out"])):
+		print(methodName + " output is not matching...")
+
 def show_image(img):
 	im = plt.imshow(img)
 	plt.show()
@@ -553,6 +557,16 @@ def show_image(img):
 def save_image(img, name):
 	im = plt.imshow(img)
 	plt.savefig("output_img_python/" + name + ".jpg")
+
+def create_plot(name, cpu, gpu):
+	x_axis = ["NN", "Bi", "AGB"]
+	plt.plot(x_axis, cpu, 'r', x_axis, gpu, 'b')
+	plt.legend(["CPU", "GPU"])
+	plt.xlabel('Demosaic Method')
+	plt.ylabel('Avg time (s)')
+	plt.savefig("plots/" + name)
+	print("Plot created...")
+
 
 class Nearest_neighbor:
 	# Number of times we are running it (this will be useful when we calculate the avg execution time)
@@ -663,7 +677,6 @@ class Adaptive_Gradient_Based:
 		return hashmap
 
 
-
 if __name__ == '__main__':
 
 	images = ['balloons.jpg', 'candy.jpg', 'cat.jpg', 'ip.jpg', 
@@ -678,8 +691,7 @@ if __name__ == '__main__':
 	# NEAREST NEIGHBOR
 	nearest_neighbor = Nearest_neighbor(im)
 	nn_results = nearest_neighbor.get_results()
-	if (not is_equal(nn_results["gpu_out"], nn_results["cpu_out"])):
-		print("NEAREST NEIGHBOR output is not matching...")
+	error_check(nn_results, "Nearest Neighbor")
 	cpu_time_nn, gpu_time_nn = nearest_neighbor.get_average(TRIALS)
 	gpu_output_nn = nearest_neighbor.gpu_im
 	save_image(gpu_output_nn, "nearest_neighbor_GPU")
@@ -690,8 +702,7 @@ if __name__ == '__main__':
 	# BILINEAR
 	bilinear = Bilinear(im)
 	bi_results = bilinear.get_results()
-	if (not is_equal(bi_results["gpu_out"], bi_results["cpu_out"])):
-		print("BILINEAR output is not matching...")
+	error_check(bi_results, "Bilinear Interpolation")
 	cpu_time_bi, gpu_time_bi = bilinear.get_average(TRIALS)
 	gpu_output_bi = bilinear.gpu_im
 	save_image(gpu_output_bi, "nearest_neighbor_GPU")
@@ -702,8 +713,7 @@ if __name__ == '__main__':
 	# ADAPTIVE GRADIENT BASED
 	adaptive = Adaptive_Gradient_Based(im)
 	agb_results = adaptive.get_results()
-	if (not is_equal(agb_results["gpu_out"], agb_results["cpu_out"])):
-		print("ADAPTIVE GRADIENT BASED output is not matching...")
+	error_check(agb_results, "Adaptive Gradient Based")
 	cpu_time_agb, gpu_time_agb = adaptive.get_average(TRIALS)
 	gpu_output_agb = adaptive.gpu_im
 	save_image(gpu_output_agb, "nearest_neighbor_GPU")
@@ -712,6 +722,10 @@ if __name__ == '__main__':
 	print("gpu_time (nn): ", gpu_time_agb)
 
 
+	# Create plot
+	cpu_times = [cpu_time_nn, cpu_time_bi, cpu_time_agb]
+	gpu_times = [gpu_time_nn, gpu_time_bi, gpu_time_agb]
+	create_plot("Demosaicing_Comparision", cpu_times, gpu_times)
 
 
 
