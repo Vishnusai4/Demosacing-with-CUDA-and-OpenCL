@@ -118,30 +118,10 @@ class Demosaic:
 
 		bilinear_kernel = """
 		#include <stdlib.h>
-		//#include <thrust/host_vector.h>
-		//#include <thrust/device_vector.h>
-
-		class Pixel 
-		{
-		public:
-			int x, y;
-			 
-			Pixel()
-			{
-			Pixel(-1,-1);
-			}
-		 
-			Pixel(int a, int b)
-			{
-				x = a;
-				y= b;
-			}
-		};
-
 
 		//__device__ float get_pixel_value(float *im, int h,int w,int *l,int *r,int *t,int* b);
 
-		__device__ bool is_valid_pair(int *ind1,int *ind2,int h, int w);
+		__device__ bool is_valid_pair(int *ind1, int *ind2, int h, int w);
 
 		__device__ bool is_valid_pixel(int *ind, int h, int w);
 
@@ -242,9 +222,8 @@ class Demosaic:
 
 
 		__device__ float average_of_two(int *p1,int *p2, float *im, int h, int w)
-
 		{
-		if (is_valid_pair(p1, p2,h,w))
+		if (is_valid_pair(p1, p2, h, w))
 		{
 		return ((im[(p1[0])*w + p1[1]] + im[(p2[0])*w + p2[1]])/2);
 		}
