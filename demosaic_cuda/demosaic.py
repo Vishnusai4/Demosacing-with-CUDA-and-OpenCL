@@ -118,9 +118,7 @@ class Demosaic:
 
 		bilinear_kernel = """
 		#include <stdlib.h>
-
-		//__device__ float get_pixel_value(float *im, int h,int w,int *l,int *r,int *t,int* b);
-
+		
 		__device__ bool is_valid_pair(int *ind1,int *ind2,int h, int w);
 
 		__device__ bool is_valid_pixel(int *ind, int h, int w);
