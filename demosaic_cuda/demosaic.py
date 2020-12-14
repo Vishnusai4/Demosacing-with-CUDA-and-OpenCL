@@ -394,8 +394,8 @@ class Demosaic:
 		self.bdim_x = int(math.ceil(im.shape[0]/2))
 		self.bdim_y = int(math.ceil(im.shape[1]/2))
 
-    	bdim = max(bdim_x, bdim_y)
-    	self.block_dim = (4,4,1)
+		bdim = max(bdim_x, bdim_y)
+		self.block_dim = (4,4,1)
 		self.grid_dim = (bdim,bdim,1)
 
 	def demosaic_nn_GPU(self):
