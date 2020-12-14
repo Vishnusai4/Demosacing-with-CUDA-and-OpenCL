@@ -2,6 +2,7 @@
 
 import time
 import numpy as np
+import sys
 
 from pycuda import gpuarray
 import pycuda.driver as cuda
@@ -12,9 +13,11 @@ import matplotlib as mpl
 mpl.use('agg')
 import matplotlib.pyplot as plt
 
-import demosaic_python.demosaic_nn as nn 
-import demosaic_python.demosaic_bi as bi 
-import demosaic_python.demosaic_agb as agb 
+sys.path.insert(1, '../demosaic_python')
+import demosaic_nn as nn 
+import demosaic_bi as bi 
+import demosaic_agb as agb 
+
 
 class Demosaic:
 	def __init__(self, im):
