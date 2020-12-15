@@ -9,10 +9,10 @@
 ## Final Project tasks
 
 ### Presentation
-- [ ] Add Results Slides
-- [ ] Add Future Works + Challenges Slides
-- [ ] Change Pseudocode?
-- [ ] Update block diagram and flow chart
+- [ ] Add Results Slides (Vishnu)
+- [ ] Add Future Works + Challenges Slides (Hayato)
+- [ ] Change Pseudocode? (Vishnu)
+- [ ] Update block diagram and flow chart (Hayato)
 
 ### Report
 - [x] Abstract (Hayato)
