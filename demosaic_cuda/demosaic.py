@@ -396,6 +396,7 @@ class Demosaic:
 		self.bdim_y = int(math.ceil(im.shape[1]/2))
 
 		bdim = max(self.bdim_x, self.bdim_y)
+		# Go for 4, 4 all the way till image dim
 		self.block_dim = (4,4,1)
 		self.grid_dim = (bdim,bdim,1)
 
