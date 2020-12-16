@@ -57,8 +57,6 @@ def demosaic_nn(im):
 	im_d = np.zeros((im.shape[0], im.shape[1], 3))
 	shape = im.shape
 	
-	print("Shape of the Image: ", im.shape)
-
 	for r in range(0, im.shape[0]):
 		for c in range(0, im.shape[1]):
 
