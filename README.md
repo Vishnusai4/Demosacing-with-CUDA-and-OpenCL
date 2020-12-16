@@ -19,7 +19,7 @@
 - [x] Introduction (Hayato)
 - [x] Prior Work (Hayato)
 - [x] Description (Hayato)
-- [ ] Objectives and Technical Challenges (Hayato / Vishnu)
+- [x] Objectives and Technical Challenges (Hayato / Vishnu)
 - [ ] Problem Formulation and Design (Vishnu)
 - [ ] Software Design (Hayato / Vishnu)
 - [ ] Results - Plots and Data (Vishnu)
