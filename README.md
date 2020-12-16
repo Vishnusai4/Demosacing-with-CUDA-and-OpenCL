@@ -16,7 +16,7 @@
 
 ### Report
 - [x] Abstract (Hayato)
-- [ ] Introduction (Hayato)
+- [x] Introduction (Hayato)
 - [ ] Prior Work (Hayato)
 - [ ] Description (Hayato)
 - [ ] Objectives and Technical Challenges (Hayato / Vishnu)
@@ -24,6 +24,7 @@
 - [ ] Software Design (Hayato / Vishnu)
 - [ ] Results - Plots and Data (Vishnu)
 - [ ] Demonstration - Pictures of the demosaiced images (Vishnu)
+- [ ] Discussion of future works (Hayato)
 - [ ] Conclusion (Vishnu)
 
 ### Website (Weebly)
