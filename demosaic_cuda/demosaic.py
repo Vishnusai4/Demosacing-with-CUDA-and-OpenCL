@@ -22,7 +22,7 @@ import demosaic_agb as agb
 
 
 class Demosaic:
-	def __init__(self, im):
+	def __init__(self, im, blocksize):
 
 		nn_kernel = """
 		#include <string.h>
@@ -397,7 +397,7 @@ class Demosaic:
 
 		bdim = max(self.bdim_x, self.bdim_y)
 		# Go for 4, 4 all the way till image dim
-		self.block_dim = (4,4,1)
+		self.block_dim = (blocksize, blocksize, 1)
 		self.grid_dim = (bdim,bdim,1)
 
 	def demosaic_nn_GPU(self):
@@ -575,9 +575,9 @@ class Nearest_neighbor:
 	gpu_im = None
 	cpu_im = None
 
-	def __init__(self, im):
+	def __init__(self, im, blocksize):
 		self.im = im
-		self.demosaic = Demosaic(im)
+		self.demosaic = Demosaic(im, blocksize)
 
 	def get_average(self, num):
 		gpu_time = 0
@@ -611,9 +611,9 @@ class Bilinear:
 	gpu_im = None
 	cpu_im = None
 
-	def __init__(self, im):
+	def __init__(self, im, blocksize):
 		self.im = im
-		self.demosaic = Demosaic(im)
+		self.demosaic = Demosaic(im, blocksize)
 
 	def get_average(self, num):
 		gpu_time = 0
@@ -647,9 +647,9 @@ class Adaptive_Gradient_Based:
 	gpu_im = None
 	cpu_im = None
 
-	def __init__(self, im):
+	def __init__(self, im, blocksize):
 		self.im = im
-		self.demosaic = Demosaic(im)
+		self.demosaic = Demosaic(im, blocksize)
 
 	def get_average(self, num):
 		gpu_time = 0
@@ -689,9 +689,10 @@ if __name__ == '__main__':
 	im = mosaiced_images[0].astype(np.float32) # Change this to change picture
 
 	TRIALS = 5
+	blocksize = 4
 
 	# NEAREST NEIGHBOR
-	nearest_neighbor = Nearest_neighbor(im)
+	nearest_neighbor = Nearest_neighbor(im, blocksize)
 	nn_results = nearest_neighbor.get_results()
 	error_check(nn_results, "Nearest Neighbor")
 	cpu_time_nn, gpu_time_nn = nearest_neighbor.get_average(TRIALS)
@@ -704,7 +705,7 @@ if __name__ == '__main__':
 	print("gpu_time (nn): ", gpu_time_nn)
 
 	# BILINEAR
-	bilinear = Bilinear(im)
+	bilinear = Bilinear(im, blocksize)
 	bi_results = bilinear.get_results()
 	error_check(bi_results, "Bilinear Interpolation")
 	cpu_time_bi, gpu_time_bi = bilinear.get_average(TRIALS)
@@ -717,7 +718,7 @@ if __name__ == '__main__':
 	print("gpu_time (bi): ", gpu_time_bi)
 
 	# ADAPTIVE GRADIENT BASED
-	adaptive = Adaptive_Gradient_Based(im)
+	adaptive = Adaptive_Gradient_Based(im, blocksize)
 	agb_results = adaptive.get_results()
 	error_check(agb_results, "Adaptive Gradient Based")
 	cpu_time_agb, gpu_time_agb = adaptive.get_average(TRIALS)
@@ -737,5 +738,14 @@ if __name__ == '__main__':
 	create_plot("Demosaicing_Comparision", cpu_times, gpu_times)
 
 
+	print("NEAREST NEIGHBOR ALTERNATING BLOCKSIZES")
+	for block in range(4, max(im.shape[0], im.shape[1]), 10):
+		nearest_neighbor = Nearest_neighbor(im, blocksize)
+		nn_results = nearest_neighbor.get_results()
+		error_check(nn_results, "Nearest Neighbor")
+		cpu_time_nn, gpu_time_nn = nearest_neighbor.get_average(TRIALS)
+
+		print("Blocksize: ", block, end=" ")
+		print("Time: ", nn_results["cpu_time"])
 
 
