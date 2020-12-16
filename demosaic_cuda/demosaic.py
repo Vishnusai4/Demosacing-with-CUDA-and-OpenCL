@@ -746,6 +746,6 @@ if __name__ == '__main__':
 		cpu_time_nn, gpu_time_nn = nearest_neighbor.get_average(TRIALS)
 
 		print("Blocksize: ", block, end=" ")
-		print("Time: ", nn_results["cpu_time"])
+		print("Time: ", nn_results["gpu_time"])
 
 
