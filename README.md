@@ -10,8 +10,8 @@
 
 ### Presentation
 - [ ] Add Results Slides (Vishnu)
-- [x] Add Future Works + Challenges Slides (Hayato)
 - [ ] Change Pseudocode so it's more detailed (Vishnu)
+- [x] Add Future Works + Challenges Slides (Hayato)
 - [x] Update block diagram and flow chart (Hayato)
 
 ### Report
@@ -24,7 +24,7 @@
 - [ ] Software Design (Hayato / Vishnu)
 - [ ] Results - Plots and Data (Vishnu)
 - [ ] Demonstration - Pictures of the demosaiced images (Vishnu)
-- [ ] Discussion of future works (Hayato)
+- [ ] Discussion of future works - *Waiting for the results section but mostly done* (Hayato)
 - [ ] Conclusion (Vishnu)
 
 ### Website (Weebly)
