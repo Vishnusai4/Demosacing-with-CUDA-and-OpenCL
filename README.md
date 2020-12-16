@@ -17,7 +17,7 @@
 ### Report
 - [x] Abstract (Hayato)
 - [x] Introduction (Hayato)
-- [ ] Prior Work (Hayato)
+- [x] Prior Work (Hayato)
 - [ ] Description (Hayato)
 - [ ] Objectives and Technical Challenges (Hayato / Vishnu)
 - [ ] Problem Formulation and Design (Vishnu)
