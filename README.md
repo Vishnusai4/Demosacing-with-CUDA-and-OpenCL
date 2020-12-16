@@ -10,9 +10,9 @@
 
 ### Presentation
 - [ ] Add Results Slides (Vishnu)
-- [ ] Add Future Works + Challenges Slides (Hayato)
-- [ ] Change Pseudocode? (Vishnu)
-- [ ] Update block diagram and flow chart (Hayato)
+- [x] Add Future Works + Challenges Slides (Hayato)
+- [ ] Change Pseudocode so it's more detailed (Vishnu)
+- [x] Update block diagram and flow chart (Hayato)
 
 ### Report
 - [x] Abstract (Hayato)
