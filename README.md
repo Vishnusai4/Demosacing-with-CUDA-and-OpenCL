@@ -20,7 +20,7 @@
 - [x] Prior Work (Hayato)
 - [x] Description (Hayato)
 - [x] Objectives and Technical Challenges (Hayato / Vishnu)
-- [ ] Problem Formulation and Design (Vishnu)
+- [x] Problem Formulation and Design (Vishnu)
 - [ ] Software Design (Hayato / Vishnu)
 - [ ] Results - Plots and Data (Vishnu)
 - [ ] Demonstration - Pictures of the demosaiced images (Vishnu)
