@@ -25,7 +25,7 @@
 - [x] Results - Plots and Data (Vishnu)
 - [x] Demonstration - Pictures of the demosaiced images (Vishnu)
 - [x] Discussion of future works - *Waiting for the results section but mostly done* (Hayato)
-- [ ] Conclusion (Vishnu)
+- [x] Conclusion (Vishnu)
 
 ### Website (Weebly)
 - [ ] Abstract
