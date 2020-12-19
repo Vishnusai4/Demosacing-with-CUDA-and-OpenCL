@@ -23,7 +23,7 @@
 - [x] Problem Formulation and Design (Vishnu)
 - [x] Software Design (Hayato / Vishnu)
 - [x] Results - Plots and Data (Vishnu)
-- [ ] Demonstration - Pictures of the demosaiced images (Vishnu)
+- [x] Demonstration - Pictures of the demosaiced images (Vishnu)
 - [x] Discussion of future works - *Waiting for the results section but mostly done* (Hayato)
 - [ ] Conclusion (Vishnu)
 
