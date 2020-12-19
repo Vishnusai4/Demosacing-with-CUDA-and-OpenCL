@@ -21,7 +21,7 @@
 - [x] Description (Hayato)
 - [x] Objectives and Technical Challenges (Hayato / Vishnu)
 - [x] Problem Formulation and Design (Vishnu)
-- [ ] Software Design (Hayato / Vishnu)
+- [x] Software Design (Hayato / Vishnu)
 - [ ] Results - Plots and Data (Vishnu)
 - [ ] Demonstration - Pictures of the demosaiced images (Vishnu)
 - [x] Discussion of future works - *Waiting for the results section but mostly done* (Hayato)
